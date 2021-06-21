@@ -20,6 +20,13 @@ export default {
   color: #2c3e50;
 }
 
+html, body, #app {
+		height: 100%;
+		padding: 0;
+		margin: 0;
+		font-size: 15px;
+	}
+
 #nav {
   padding: 30px;
 }

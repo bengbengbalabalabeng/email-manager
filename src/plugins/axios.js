@@ -2,6 +2,7 @@
 
 import Vue from 'vue';
 import axios from "axios";
+import { getToken } from '@/util/common.js'
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -17,7 +18,8 @@ let config = {
 const _axios = axios.create(config);
 
 _axios.interceptors.request.use(
-  function(config) {
+  function (config) {
+    config.headers['token'] = getToken()
     // Do something before request is sent
     return config;
   },
@@ -30,12 +32,30 @@ _axios.interceptors.request.use(
 // Add a response interceptor
 _axios.interceptors.response.use(
   function(response) {
-    // Do something with response data
-    return response;
+    console.log("response ->" + response)
+
+		let res = response.data
+
+		if (res.code === 200) {
+			return response
+		} else {
+			Element.Message.error(!res.msg ? '系统异常' : res.msg)
+			return Promise.reject(response.data.msg)
+		}
   },
   function(error) {
-    // Do something with response error
-    return Promise.reject(error);
+    console.log(error)
+
+		if (error.response.data) {
+			error.massage = error.response.data.msg
+		}
+
+		if (error.response.status === 401) {
+			this.$router.push("/login")
+		}
+
+		Element.Message.error(error.massage, {duration: 3000})
+		return Promise.reject(error)
   }
 );
 
