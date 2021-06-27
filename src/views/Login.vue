@@ -32,14 +32,14 @@
 </template>
 
 <script>
-import { setToken } from '@/util/common.js'
+import { setToken } from "../util/common";
 
 export default {
   name: "login",
   data() {
       return {
         ruleForm: {
-          username: 'admin',
+          username: 'zhangsan',
           password: '123'
         },
         rules: {
@@ -56,15 +56,17 @@ export default {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$message({
-              message: 'submit',
-              type: 'success',
-              duration: 1000
+            this.axios.post('/login', this.ruleForm).then(res => {
+              setToken(res.headers['authorization'])
+              this.$message({
+                message: 'submit',
+                type: 'success',
+                duration: 1000
+              })
+              this.$router.push('/index');
             })
-            setToken('cndjcbdjcbjdbcjdsabcjbdscbjdbcjdbc');
-            this.$router.push('/index');
           } else {
-            this.$message.error('error submit!!');
+            this.$message.error('登陆失败!');
             return false;
           }
         });

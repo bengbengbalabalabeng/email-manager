@@ -1,15 +1,15 @@
 <template>
   <div class='el-index-page'>
-    <el-container style="height：100%">
+    <el-container style="height: 100%">
       <AsideMenu />
       <el-container>
          <el-header style="text-align: right; font-size: 12px">
-          <el-dropdown>
+          <el-dropdown @command="handleCommand">
             <i class="el-icon-setting" style="margin-right: 15px"></i>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>查看</el-dropdown-item>
-              <el-dropdown-item>新增</el-dropdown-item>
-              <el-dropdown-item>删除</el-dropdown-item>
+              <el-dropdown-item command="a">查看</el-dropdown-item>
+              <el-dropdown-item command="b">新增</el-dropdown-item>
+              <el-dropdown-item command="logout">退出登陆</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           <span>王小虎</span>
@@ -26,12 +26,26 @@
 
 <script>
 import AsideMenu from './aside/AsideMenu'
+import { removeToken } from '../util/common'
 
 export default {
   name: "index",
   components: {
     AsideMenu
   },
+  methods: {
+    handleCommand(command) {
+      switch (command) {
+        case 'logout':
+          this.logout();
+          break
+      }
+    },
+    logout() {
+      removeToken();
+      this.$router.push('/login');
+    }
+  }
 };
 </script>
 
